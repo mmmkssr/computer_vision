@@ -1,7 +1,7 @@
 // Classifier Variable
 let classifier;
 // Model URL
-let imageModelURL = 'https://teachablemachine.withgoogle.com/models/pqYYAImVv/';
+let imageModelURL = "https://teachablemachine.withgoogle.com/models/pqYYAImVv/";
 
 // Video
 let video;
@@ -11,7 +11,8 @@ let label = "";
 
 // Load the model first
 function preload() {
-  classifier = ml5.imageClassifier(imageModelURL + 'model.json');
+  //cargar antes de comenzar a trabajar
+  classifier = ml5.imageClassifier(imageModelURL + "model.json");
 }
 
 function setup() {
@@ -21,7 +22,7 @@ function setup() {
   video.size(320, 240);
   video.hide();
 
-  flippedVideo = ml5.flipImage(video);
+  //flippedVideo = ml5.flipImage(video);
   // Start classifying
   classifyVideo();
 }
@@ -29,7 +30,7 @@ function setup() {
 function draw() {
   background(0);
   // Draw the video
-  image(flippedVideo, 0, 0);
+  image(video, 0, 0);
 
   // Draw the label
   fill(255);
@@ -40,14 +41,13 @@ function draw() {
 
 // Get a prediction for the current video frame
 function classifyVideo() {
-  flippedVideo = ml5.flipImage(video)
-  classifier.classify(flippedVideo, gotResult);
-  flippedVideo.remove();
-
+  //flippedVideo = ml5.flipImage(video)
+  classifier.classify(video, gotResult);
+  //flippedVideo.remove();
 }
 
 // When we get a result
-function gotResult(error, results) {
+function gotResult(results, error) {
   // If there is an error
   if (error) {
     console.error(error);
