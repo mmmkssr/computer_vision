@@ -22,6 +22,11 @@ let paletteSize = 100;
 let paletteAngle = 0;
 let paletteVisible = false;
 
+//Variables para la animación de las llaves
+let keysX, keysY;
+let keysPulseSize = 100; // Tamaño del brillo
+let keysPulseVisible = false; // Controlar la visibilidad del brillo
+
 // Load the model first
 function preload() {
   //cargar antes de comenzar a trabajar
@@ -42,6 +47,10 @@ function setup() {
   // Posición inicial de la paleta
   paletteX = width / 2;
   paletteY = height / 2;
+
+  // Posición inicial de las llaves
+  keysX = width / 2;
+  keysY = height / 2;
 
   //flippedVideo = ml5.flipImage(video);
   // Start classifying
@@ -65,6 +74,24 @@ function draw() {
   textSize(12);
   textAlign(LEFT);
   text(confianza, 10, height - 4);
+
+  // Efecto al detectar las llaves
+  if (label == "llaves" && confianza > 0.9) {
+    filter(BLUR, 4);
+    filter(GRAY);
+
+    // Activar la animación de pulso
+    keysPulseVisible = true;
+
+    // Efecto de pulso para simular brillo
+    fill(255, 255, 0, 150); // Color amarillo con opacidad
+    noStroke();
+    ellipse(keysX, keysY, keysPulseSize, keysPulseSize); // Dibujar el brillo
+    keysPulseSize += sin(frameCount * 0.1) * 2; // Cambiar el tamaño para efecto pulsante
+  } else {
+    keysPulseVisible = false;
+    keysPulseSize = 100; // Resetear el tamaño
+  }
 
   //Efecto al detectar la paleta
   if (label == "paleta" && confianza > 0.9) {
@@ -94,6 +121,7 @@ function draw() {
     paletteVisible = false;
   }
 
+  //Efecto al detectar el carro de bombero
   if (label == "carro" && confianza > 0.9) {
     filter(BLUR, 4);
     filter(GRAY);
