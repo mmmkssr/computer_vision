@@ -16,6 +16,12 @@ let flameSize = 50;
 let flameVisible = false;
 let flameOpacity = 255;
 
+//Variables para la animación de la paleta
+let paletteX, paletteY;
+let paletteSize = 100;
+let paletteAngle = 0;
+let paletteVisible = false;
+
 // Load the model first
 function preload() {
   //cargar antes de comenzar a trabajar
@@ -32,6 +38,10 @@ function setup() {
   // Posición inicial de la llama
   flameX = width / 2;
   flameY = height / 2 + 120;
+
+  // Posición inicial de la paleta
+  paletteX = width / 2;
+  paletteY = height / 2;
 
   //flippedVideo = ml5.flipImage(video);
   // Start classifying
@@ -55,6 +65,34 @@ function draw() {
   textSize(12);
   textAlign(LEFT);
   text(confianza, 10, height - 4);
+
+  //Efecto al detectar la paleta
+  if (label == "paleta" && confianza > 0.9) {
+    filter(BLUR, 4);
+    filter(GRAY);
+
+    paletteVisible = true; // Hacer visible la paleta
+    paletteSize = 100 + sin(frameCount * 0.1) * 20; // Escala variable
+    paletteAngle += 0.05; // Aumentar el ángulo para girar
+
+    // Dibujar un rectángulo que gire, que simule una paleta
+    push();
+    translate(paletteX, paletteY); // Mover el origen a la posición del rectángulo
+    rotate(paletteAngle); // Rotar según el ángulo
+    noStroke();
+    fill(163, 212, 68); // Color del rectángulo
+    rectMode(CENTER);
+    rect(0, 0, paletteSize, paletteSize * 2); // Dibujar la paleta
+    pop();
+
+    // Mensaje al detectar "paleta"
+    fill(103, 158, 2);
+    textSize(25);
+    textAlign(CENTER);
+    text("¡La paleta es deliciosa!", width / 2, height / 2 + 200);
+  } else {
+    paletteVisible = false;
+  }
 
   if (label == "carro" && confianza > 0.9) {
     filter(BLUR, 4);
@@ -81,7 +119,7 @@ function draw() {
     fill(217, 4, 41);
     textSize(25);
     textAlign(CENTER);
-    text("¡Bombero detectado!", width / 2, height / 2 + 200);
+    text("¡Bombero Contactado!", width / 2, height / 2 + 200);
   } else {
     flameVisible = false;
   }
